@@ -11,3 +11,9 @@ scrapbox writer service
 ```sh
 npm test
 ```
+
+## Deploy
+
+```sh
+gcloud builds submit --tag asia.gcr.io/$GCP_PROJECT/scrapper
+```
