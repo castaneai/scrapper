@@ -1,0 +1,31 @@
+{
+  "name": "scrapper",
+  "version": "1.0.0",
+  "description": "scrapbox writer service",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/castaneai/scrapper.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/castaneai/scrapper/issues"
+  },
+  "homepage": "https://github.com/castaneai/scrapper#readme",
+  "dependencies": {
+    "puppeteer": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/puppeteer": "^2.0.1",
+    "@types/uuid": "^7.0.3",
+    "jest": "^25.4.0",
+    "ts-jest": "^25.4.0",
+    "typescript": "^3.8.3",
+    "uuid": "^7.0.3"
+  }
+}
