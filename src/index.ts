@@ -27,10 +27,11 @@ app.post('/', async (req: express.Request, res: express.Response) => {
 		return;
 	}
 	console.log(r);
-	console.log(`writing to scrapbox.io/${project}/${r.title}...`);
+	const url = `https://scrapbox.io/${project}/${encodeURIComponent(r.title.replace(' ', '_'))}`;
+	console.log(`writing to ${url}...`);
 	await writeToScrapbox(sid, project, r.title, r.text);
-	console.log('finish write')
-	res.sendStatus(200).send();
+	console.log('finish write');
+	res.send(url);
 });
 
 const port = process.env.PORT || 8080;

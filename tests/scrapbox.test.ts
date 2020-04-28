@@ -14,7 +14,8 @@ if (!sid) {
 describe('scrapbox', () => {
 	it('write text to new page', async () => {
 		jest.setTimeout(10000);
-		const pageName = uuidv4();
-		await writeToScrapbox(sid, project, pageName, '[http://test.com aaaaa]\nあいうえお\nabc123\n#test')
+		const pageName = 'test-title';
+		const text = 'test-text\n[test]\n[test2]\n[test3]';
+		await writeToScrapbox(sid, project, pageName, text);
 	})
 })
