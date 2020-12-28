@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { writeToScrapbox } from './scrapbox';
+import puppeteer from "puppeteer";
 
 const project = process.env.SCRAPBOX_PROJECT;
 if (!project) {
@@ -20,17 +21,25 @@ type RequestBody = {
 	text: string;
 }
 
+let browser: puppeteer.Browser | null = null;
+
 app.post('/', async (req: express.Request, res: express.Response) => {
 	const r = req.body as RequestBody;
 	if (!r) {
 		res.sendStatus(400);
 		return;
 	}
-	console.log(r);
+
+	if (browser == null) {
+		browser = await puppeteer.launch({
+			headless: false,
+			args: ['--no-sandbox', '--disable-setuid-sandbox'],
+		});
+	}
+
 	const url = `https://scrapbox.io/${project}/${encodeURIComponent(r.title.replace(' ', '_'))}`;
 	console.log(`writing to ${url}...`);
-	await writeToScrapbox(sid, project, r.title, r.text);
-	console.log('finish write');
+	await writeToScrapbox(browser, sid, project, r.title, r.text);
 	res.send(url);
 });
 
