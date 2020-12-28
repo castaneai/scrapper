@@ -1,3 +1,9 @@
+FROM node:12-alpine AS builder
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+WORKDIR /build
+COPY . .
+RUN npm install && npm run build
+
 FROM node:12
 
 # Dependencies needed for packages downstream
@@ -46,8 +52,11 @@ RUN apt-get update && apt-get install -y \
 	xdg-utils \
 	wget
 
-WORKDIR /usr/src/app
-COPY package*.json ./
-COPY . ./
-RUN npm install && npm run build
-CMD [ "npm", "start" ]
+WORKDIR /app
+
+COPY package*.json /app/
+
+RUN npm install --production --cache /tmp/cache && rm -rf /tmp/cache
+COPY --from=builder /build/dist ./dist/
+
+ENTRYPOINT ["npm", "start"]

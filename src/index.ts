@@ -25,22 +25,29 @@ let browser: puppeteer.Browser | null = null;
 
 app.post('/', async (req: express.Request, res: express.Response) => {
 	const r = req.body as RequestBody;
-	if (!r) {
+	if (!r || !r.title || !r.text) {
+		console.log(`invalid request body: ${r}`);
 		res.sendStatus(400);
 		return;
 	}
 
-	if (browser == null) {
-		browser = await puppeteer.launch({
-			headless: false,
-			args: ['--no-sandbox', '--disable-setuid-sandbox'],
-		});
-	}
+	try {
+		if (browser == null) {
+			browser = await puppeteer.launch({
+				args: ['--no-sandbox', '--disable-setuid-sandbox'],
+			});
+		}
 
-	const url = `https://scrapbox.io/${project}/${encodeURIComponent(r.title.replace(' ', '_'))}`;
-	console.log(`writing to ${url}...`);
-	await writeToScrapbox(browser, sid, project, r.title, r.text);
-	res.send(url);
+		const encodedTitle = encodeURIComponent(r.title.replace(' ', '_'));
+		const url = `https://scrapbox.io/${project}/${encodedTitle}`;
+		console.log(`started writing to ${url}...`);
+		await writeToScrapbox(browser, sid, project, r.title, r.text);
+		console.log(`finished writing to ${url}`);
+		res.send(url);
+	} catch (err) {
+		console.error(`error occured: ${err}`)
+		res.sendStatus(500);
+	}
 });
 
 const port = process.env.PORT || 8080;
